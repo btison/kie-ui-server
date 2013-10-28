@@ -1,0 +1,38 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.jboss.btison.kie.ui.server</groupId>
+    <artifactId>kie-ui-server</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>process-server-client</artifactId>
+  <name>Kie UI Server :: Process Service Client</name>
+  <dependencies>
+    <dependency>
+      <groupId>org.jboss.seam.transaction</groupId>
+      <artifactId>seam-transaction</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.enterprise</groupId>
+      <artifactId>cdi-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jbpm</groupId>
+      <artifactId>jbpm-kie-services</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jbpm</groupId>
+      <artifactId>jbpm-console-ng-business-domain-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.btison.kie.ui.server</groupId>
+      <artifactId>remote-services</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.btison.kie.ui.server</groupId>
+      <artifactId>rest-client</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
+</project>

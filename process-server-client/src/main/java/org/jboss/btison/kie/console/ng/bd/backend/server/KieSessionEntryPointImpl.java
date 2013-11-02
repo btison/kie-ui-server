@@ -22,24 +22,18 @@ import java.util.List;
 import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 
 import org.jboss.btison.kie.services.client.api.runtime.AdditionalRestClient;
 import org.jboss.btison.kie.services.client.api.runtime.RestClient;
 import org.jboss.errai.bus.server.annotations.Service;
 import org.jboss.seam.transaction.Transactional;
 import org.jbpm.console.ng.bd.service.KieSessionEntryPoint;
-import org.jbpm.kie.services.api.RuntimeDataService;
-import org.jbpm.kie.services.impl.model.ProcessInstanceDesc;
 
 @Service
 @ApplicationScoped
 @Transactional
 public class KieSessionEntryPointImpl implements KieSessionEntryPoint {
     
-    @Inject
-    private RuntimeDataService dataService;
-
     @Override
     public long startProcess(String domainName, String processId) {
         RestClient restClient = new RestClient();
@@ -54,17 +48,15 @@ public class KieSessionEntryPointImpl implements KieSessionEntryPoint {
 
     @Override
     public void abortProcessInstance(long processInstanceId) {
-        ProcessInstanceDesc piDesc = dataService.getProcessInstanceById(processInstanceId);        
-        RestClient restClient = new RestClient();
-        restClient.abortProcessInstance(piDesc.getDeploymentId(),processInstanceId);
+        AdditionalRestClient restClient = new AdditionalRestClient();
+        restClient.abortProcessInstance(processInstanceId);
     }
     
     @Override
     public void abortProcessInstances(List<Long> processInstanceIds) {
-        RestClient restClient = new RestClient();
+        AdditionalRestClient restClient = new AdditionalRestClient();
         for (long processInstanceId : processInstanceIds) {
-            ProcessInstanceDesc piDesc = dataService.getProcessInstanceById(processInstanceId);              
-            restClient.abortProcessInstance(piDesc.getDeploymentId(), processInstanceId);
+            restClient.abortProcessInstance(processInstanceId);
         }
     }
 
@@ -75,17 +67,15 @@ public class KieSessionEntryPointImpl implements KieSessionEntryPoint {
 
     @Override
     public void signalProcessInstance(long processInstanceId, String signalName, Object event) {
-        ProcessInstanceDesc piDesc = dataService.getProcessInstanceById(processInstanceId); 
-        RestClient restClient = new RestClient();
-        restClient.signalProcessInstance(piDesc.getDeploymentId(), processInstanceId, signalName, event);
+        AdditionalRestClient restClient = new AdditionalRestClient();
+        restClient.signalProcessInstance(processInstanceId, signalName, event);
     }
     
     @Override
     public void signalProcessInstances(List<Long> processInstanceIds, String signalName, Object event) {
-        RestClient restClient = new RestClient();
+        AdditionalRestClient restClient = new AdditionalRestClient();
         for (Long processInstanceId : processInstanceIds) {
-            ProcessInstanceDesc piDesc = dataService.getProcessInstanceById(processInstanceId); 
-            restClient.signalProcessInstance(piDesc.getDeploymentId(), processInstanceId, signalName, event);
+            restClient.signalProcessInstance(processInstanceId, signalName, event);
         }
     }
 
@@ -96,9 +86,8 @@ public class KieSessionEntryPointImpl implements KieSessionEntryPoint {
 
     @Override
     public void setProcessVariable(long processInstanceId, String variableId, Object value) {
-        ProcessInstanceDesc piDesc = dataService.getProcessInstanceById(processInstanceId);
         AdditionalRestClient restClient = new AdditionalRestClient();
-        restClient.setProcessVariable(piDesc.getDeploymentId(), processInstanceId, variableId, value);
+        restClient.setProcessVariable(processInstanceId, variableId, value);
     }
 
 }

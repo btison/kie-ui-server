@@ -10,7 +10,9 @@ import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 
+import org.drools.core.command.runtime.process.AbortProcessInstanceCommand;
 import org.drools.core.command.runtime.process.SetProcessInstanceVariablesCommand;
+import org.drools.core.command.runtime.process.SignalEventCommand;
 import org.jboss.btison.kie.services.task.command.AddCommentCommand;
 import org.jboss.btison.kie.services.task.command.AddContentCommand;
 import org.jboss.btison.kie.services.task.command.DeleteCommentCommand;
@@ -50,7 +52,9 @@ public class JaxbCommandsRequest {
             @XmlElement(name = "get-potential-owners", type = GetPotentialOwnersForTaskIdCommand.class),
             @XmlElement(name = "task-add-content", type = AddContentCommand.class),
             
-            @XmlElement(name = "set-process-instance-variable", type=SetProcessInstanceVariablesCommand.class)})
+            @XmlElement(name = "abort-process-instance", type = AbortProcessInstanceCommand.class),
+            @XmlElement(name = "signal-event", type = SignalEventCommand.class),
+            @XmlElement(name = "set-process-instance-variable", type=SetProcessInstanceVariablesCommand.class) })
     protected List<Command<?>> commands;
 
     public JaxbCommandsRequest() {

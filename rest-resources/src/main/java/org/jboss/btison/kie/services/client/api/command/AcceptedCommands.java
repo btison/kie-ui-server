@@ -4,7 +4,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.drools.core.command.runtime.process.AbortProcessInstanceCommand;
 import org.drools.core.command.runtime.process.SetProcessInstanceVariablesCommand;
+import org.drools.core.command.runtime.process.SignalEventCommand;
 import org.jboss.btison.kie.services.task.command.AddCommentCommand;
 import org.jboss.btison.kie.services.task.command.AddContentCommand;
 import org.jboss.btison.kie.services.task.command.DeleteCommentCommand;
@@ -20,6 +22,10 @@ public class AcceptedCommands {
 
     private static Set<Class> acceptedCommands = new HashSet<Class>();
     static {
+        
+        acceptedCommands.add(AbortProcessInstanceCommand.class);
+        acceptedCommands.add(SetProcessInstanceVariablesCommand.class);
+        acceptedCommands.add(SignalEventCommand.class);
         
         acceptedCommands.add(SetPriorityCommand.class);
         acceptedCommands.add(SetExpirationDateCommand.class);

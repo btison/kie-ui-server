@@ -1,6 +1,6 @@
 package org.jboss.btison.kie.services.remote.rest;
 
-import static org.jboss.btison.kie.services.remote.util.CommandsRequestUtil.restProcessJaxbCommandsRequest;
+import static org.jboss.btison.kie.services.remote.util.RuntimeCommandsRequestUtil.restProcessJaxbCommandsRequest;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -12,22 +12,22 @@ import javax.ws.rs.core.MediaType;
 
 import org.jboss.btison.kie.services.client.serialization.jaxb.JaxbCommandsRequest;
 import org.jboss.btison.kie.services.client.serialization.jaxb.JaxbCommandsResponse;
-import org.kie.services.remote.cdi.ProcessRequestBean;
+import org.jboss.btison.kie.services.remote.cdi.RuntimeProcessRequestBean;
 
 
 @RequestScoped
-@Path("additional/runtime/{id: [a-zA-Z0-9-:\\.]+}")
+@Path("additional/runtime/")
 public class AdditionalRuntimeResource {
     
     @Inject
-    private ProcessRequestBean processRequestBean;
+    private RuntimeProcessRequestBean runtimeProcessRequestBean;
 
     @POST
     @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
     @Path("/execute")
     public JaxbCommandsResponse execute(JaxbCommandsRequest cmdsRequest) {
-        return restProcessJaxbCommandsRequest(cmdsRequest, processRequestBean);
+        return restProcessJaxbCommandsRequest(cmdsRequest, runtimeProcessRequestBean);
     }
 
 }

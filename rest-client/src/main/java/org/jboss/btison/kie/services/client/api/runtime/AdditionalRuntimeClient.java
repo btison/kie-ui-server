@@ -16,7 +16,7 @@ public interface AdditionalRuntimeClient {
     @POST
     @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
-    @Path("/{id: [a-zA-Z0-9-:\\.]+}/execute")
-    public JaxbCommandsResponse execute(@PathParam("id") String deploymentId, JaxbCommandsRequest cmdsRequest);
+    @Path("/execute")
+    public JaxbCommandsResponse execute(JaxbCommandsRequest cmdsRequest);
     
 }

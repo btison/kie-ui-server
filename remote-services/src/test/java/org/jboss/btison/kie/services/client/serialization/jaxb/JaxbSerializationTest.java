@@ -7,9 +7,21 @@ import java.util.List;
 import java.util.Map;
 
 import org.jboss.btison.kie.services.client.serialization.jaxb.impl.JaxbCommentListResponse;
+import org.jboss.btison.kie.services.client.serialization.jaxb.impl.JaxbNodeInstanceDescListResponse;
+import org.jboss.btison.kie.services.client.serialization.jaxb.impl.JaxbNodeInstanceDescResponse;
 import org.jboss.btison.kie.services.client.serialization.jaxb.impl.JaxbOrganizationalEntityMapResponse;
+import org.jboss.btison.kie.services.client.serialization.jaxb.impl.JaxbProcessInstanceDescListResponse;
+import org.jboss.btison.kie.services.client.serialization.jaxb.impl.JaxbProcessInstanceDescResponse;
+import org.jboss.btison.kie.services.client.serialization.jaxb.impl.JaxbVariableStateDescListResponse;
+import org.jboss.btison.kie.services.client.serialization.jaxb.impl.JaxbVariableStateDescResponse;
+import org.jboss.btison.kie.services.command.runtime.process.GetNodeInstanceDescCommand;
+import org.jboss.btison.kie.services.command.runtime.process.GetProcessInstanceDescCommand;
+import org.jboss.btison.kie.services.command.runtime.process.GetVariableStateDescCommand;
 import org.jboss.btison.kie.services.task.command.GetAllCommentsByTaskIdCommand;
 import org.jboss.btison.kie.services.task.command.GetPotentialOwnersForTaskIdCommand;
+import org.jbpm.kie.services.impl.model.NodeInstanceDesc;
+import org.jbpm.kie.services.impl.model.ProcessInstanceDesc;
+import org.jbpm.kie.services.impl.model.VariableStateDesc;
 import org.jbpm.services.task.impl.model.CommentImpl;
 import org.jbpm.services.task.impl.model.UserImpl;
 import org.jbpm.services.task.impl.model.xml.JaxbComment;
@@ -64,6 +76,78 @@ public class JaxbSerializationTest {
         
         JaxbOrganizationalEntityMapResponse response = new JaxbOrganizationalEntityMapResponse(map, 1, new GetPotentialOwnersForTaskIdCommand());
         
+        testRoundtrip(response);
+    }
+    
+    @Test
+    public void testProcessInstanceDescResponse() throws Exception {
+        ProcessInstanceDesc p = new ProcessInstanceDesc(1,"id","name","version",1,"deploymentId",new Date(),"initiator");
+
+        JaxbProcessInstanceDescResponse response = new JaxbProcessInstanceDescResponse(p, 1, new GetProcessInstanceDescCommand());
+
+        testRoundtrip(response);
+    }
+    
+    @Test
+    public void testProcessInstanceDescListResponse() throws Exception {
+        ProcessInstanceDesc p1 = new ProcessInstanceDesc(1,"id1","name1","version1",1,"deploymentId1",new Date(),"initiator1");
+        JaxbProcessInstanceDescResponse r1 = new JaxbProcessInstanceDescResponse(p1);
+        ProcessInstanceDesc p2 = new ProcessInstanceDesc(2,"id2","name2","version2",2,"deploymentId2",new Date(),"initiator2");
+        JaxbProcessInstanceDescResponse r2 = new JaxbProcessInstanceDescResponse(p2);
+        List<JaxbProcessInstanceDescResponse> list = new ArrayList<JaxbProcessInstanceDescResponse>();
+        list.add(r1);
+        list.add(r2);
+        
+        JaxbProcessInstanceDescListResponse response = new JaxbProcessInstanceDescListResponse(list, 1, new GetProcessInstanceDescCommand());
+
+        testRoundtrip(response);
+    }
+    
+    @Test
+    public void testNodeInstanceDescResponse() throws Exception {
+        NodeInstanceDesc n = new NodeInstanceDesc("1","nodeid","name","nodetype","deploymentId",1,new Date(),"connection",1);
+
+        JaxbNodeInstanceDescResponse response = new JaxbNodeInstanceDescResponse(n, 1, new GetNodeInstanceDescCommand());
+
+        testRoundtrip(response);
+    }
+    
+    @Test
+    public void testNodeInstanceDescListResponse() throws Exception {
+        NodeInstanceDesc n1 = new NodeInstanceDesc("1","nodeid","name","nodetype","deploymentId",1,new Date(),"connection",1);
+        JaxbNodeInstanceDescResponse r1 = new JaxbNodeInstanceDescResponse(n1);        
+        NodeInstanceDesc n2 = new NodeInstanceDesc("2","nodeid2","name2","nodetype2","deploymentId2",2,new Date(),"connection2",1);
+        JaxbNodeInstanceDescResponse r2 = new JaxbNodeInstanceDescResponse(n2);
+        List<JaxbNodeInstanceDescResponse> list = new ArrayList<JaxbNodeInstanceDescResponse>();
+        list.add(r1);
+        list.add(r2);
+        
+        JaxbNodeInstanceDescListResponse response = new JaxbNodeInstanceDescListResponse(list, 1, new GetNodeInstanceDescCommand());
+
+        testRoundtrip(response);
+    }
+    
+    @Test
+    public void testVariableStateDescResponse() throws Exception {
+        VariableStateDesc v = new VariableStateDesc("id","varInstId","old","new","deploymentId",1,new Date());
+        
+        JaxbVariableStateDescResponse response = new JaxbVariableStateDescResponse(v, 1, new GetVariableStateDescCommand());
+
+        testRoundtrip(response);
+    }
+    
+    @Test
+    public void testVariableStateDescListResponse() throws Exception {
+        VariableStateDesc v1 = new VariableStateDesc("id","varInstId","old","new","deploymentId",1,new Date());
+        JaxbVariableStateDescResponse r1 = new JaxbVariableStateDescResponse(v1);        
+        VariableStateDesc v2 = new VariableStateDesc("id2","varInstId2","old2","new2","deploymentId2",2,new Date());
+        JaxbVariableStateDescResponse r2 = new JaxbVariableStateDescResponse(v2);  
+        List<JaxbVariableStateDescResponse> list = new ArrayList<JaxbVariableStateDescResponse>();
+        list.add(r1);
+        list.add(r2);
+        
+        JaxbVariableStateDescListResponse response = new JaxbVariableStateDescListResponse(list, 1, new GetVariableStateDescCommand());
+
         testRoundtrip(response);
     }
 

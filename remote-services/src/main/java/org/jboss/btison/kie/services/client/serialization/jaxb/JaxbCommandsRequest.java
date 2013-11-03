@@ -13,6 +13,9 @@ import javax.xml.bind.annotation.XmlSchemaType;
 import org.drools.core.command.runtime.process.AbortProcessInstanceCommand;
 import org.drools.core.command.runtime.process.SetProcessInstanceVariablesCommand;
 import org.drools.core.command.runtime.process.SignalEventCommand;
+import org.jboss.btison.kie.services.command.runtime.process.GetNodeInstanceDescCommand;
+import org.jboss.btison.kie.services.command.runtime.process.GetProcessInstanceDescCommand;
+import org.jboss.btison.kie.services.command.runtime.process.GetVariableStateDescCommand;
 import org.jboss.btison.kie.services.task.command.AddCommentCommand;
 import org.jboss.btison.kie.services.task.command.AddContentCommand;
 import org.jboss.btison.kie.services.task.command.DeleteCommentCommand;
@@ -54,7 +57,10 @@ public class JaxbCommandsRequest {
             
             @XmlElement(name = "abort-process-instance", type = AbortProcessInstanceCommand.class),
             @XmlElement(name = "signal-event", type = SignalEventCommand.class),
-            @XmlElement(name = "set-process-instance-variable", type=SetProcessInstanceVariablesCommand.class) })
+            @XmlElement(name = "set-process-instance-variable", type = SetProcessInstanceVariablesCommand.class),
+            @XmlElement(name = "get-process-instance-desc", type = GetProcessInstanceDescCommand.class),
+            @XmlElement(name = "get-node-instance-desc", type = GetNodeInstanceDescCommand.class),
+            @XmlElement(name = "get-variable-state-desc", type = GetVariableStateDescCommand.class)})
     protected List<Command<?>> commands;
 
     public JaxbCommandsRequest() {

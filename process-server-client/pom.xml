@@ -34,5 +34,13 @@
       <artifactId>rest-client</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>org.jbpm</groupId>
+      <artifactId>jbpm-console-ng-process-runtime-backend</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jbpm</groupId>
+      <artifactId>jbpm-console-ng-human-tasks-backend</artifactId>
+    </dependency>
   </dependencies>
 </project>

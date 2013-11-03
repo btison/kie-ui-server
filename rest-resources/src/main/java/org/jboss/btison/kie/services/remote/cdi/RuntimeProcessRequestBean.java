@@ -4,6 +4,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.drools.core.command.impl.GenericCommand;
+import org.jboss.btison.kie.services.command.runtime.process.RuntimeDataServiceCommandContext;
 import org.jboss.seam.transaction.Transactional;
 import org.jbpm.kie.services.api.RuntimeDataService;
 import org.jbpm.kie.services.impl.model.ProcessInstanceDesc;
@@ -50,6 +51,20 @@ public class RuntimeProcessRequestBean {
         return result;
     }
     
+    public Object doRuntimeDataServiceOperation(Command<?> cmd) {
+        Object result = null;
+        RuntimeDataServiceCommandContext context = new RuntimeDataServiceCommandContext(dataService);
+        try {
+            result =  ((GenericCommand<?>) cmd).execute(context); 
+        } catch (Exception e) {
+            JaxbExceptionResponse exceptResp = new JaxbExceptionResponse(e, cmd);
+            logger.warn( "Unable to execute " + exceptResp.getCommandName() + " because of " + e.getClass().getSimpleName() + ": " + e.getMessage());
+            logger.debug("Stack trace: \n", e);
+            result = exceptResp;
+        }
+        return result;
+    }
+    
     protected RuntimeEngine getRuntimeEngine(String domainName, Long processInstanceId) {
         RuntimeManager runtimeManager = runtimeMgrMgr.getRuntimeManager(domainName);
         Context<?> runtimeContext;
@@ -63,6 +78,5 @@ public class RuntimeProcessRequestBean {
         }
         return runtimeManager.getRuntimeEngine(runtimeContext);
     }
-
 
 }

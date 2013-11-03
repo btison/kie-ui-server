@@ -16,9 +16,21 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.drools.core.command.runtime.process.GetProcessInstancesCommand;
 import org.drools.core.common.DefaultFactHandle;
 import org.jboss.btison.kie.services.client.serialization.jaxb.impl.JaxbCommentListResponse;
+import org.jboss.btison.kie.services.client.serialization.jaxb.impl.JaxbNodeInstanceDescListResponse;
+import org.jboss.btison.kie.services.client.serialization.jaxb.impl.JaxbNodeInstanceDescResponse;
 import org.jboss.btison.kie.services.client.serialization.jaxb.impl.JaxbOrganizationalEntityMapResponse;
+import org.jboss.btison.kie.services.client.serialization.jaxb.impl.JaxbProcessInstanceDescListResponse;
+import org.jboss.btison.kie.services.client.serialization.jaxb.impl.JaxbProcessInstanceDescResponse;
+import org.jboss.btison.kie.services.client.serialization.jaxb.impl.JaxbVariableStateDescListResponse;
+import org.jboss.btison.kie.services.client.serialization.jaxb.impl.JaxbVariableStateDescResponse;
+import org.jboss.btison.kie.services.command.runtime.process.GetNodeInstanceDescCommand;
+import org.jboss.btison.kie.services.command.runtime.process.GetProcessInstanceDescCommand;
+import org.jboss.btison.kie.services.command.runtime.process.GetVariableStateDescCommand;
 import org.jboss.btison.kie.services.task.command.GetAllCommentsByTaskIdCommand;
 import org.jboss.btison.kie.services.task.command.GetPotentialOwnersForTaskIdCommand;
+import org.jbpm.kie.services.impl.model.NodeInstanceDesc;
+import org.jbpm.kie.services.impl.model.ProcessInstanceDesc;
+import org.jbpm.kie.services.impl.model.VariableStateDesc;
 import org.jbpm.services.task.commands.GetTaskAssignedAsBusinessAdminCommand;
 import org.jbpm.services.task.commands.GetTaskAssignedAsPotentialOwnerCommand;
 import org.jbpm.services.task.commands.GetTaskByWorkItemIdCommand;
@@ -71,6 +83,9 @@ public class JaxbCommandsResponse {
             @XmlElement(name = "work-item", type = JaxbWorkItem.class),
             @XmlElement(name = "task-comment-list", type = JaxbCommentListResponse.class),
             @XmlElement(name = "organizational-entity-map", type= JaxbOrganizationalEntityMapResponse.class),
+            @XmlElement(name = "process-instance-desc-list", type= JaxbProcessInstanceDescListResponse.class),
+            @XmlElement(name = "node-instance-desc-list", type= JaxbNodeInstanceDescListResponse.class),
+            @XmlElement(name = "variable-state-desc-list", type= JaxbVariableStateDescListResponse.class),
             @XmlElement(name = "other", type = JaxbOtherResponse.class),
             })
     private List<JaxbCommandResponse<?>> responses;
@@ -97,6 +112,15 @@ public class JaxbCommandsResponse {
         
         //OrganizationalEntity
         cmdListTypes.put(GetPotentialOwnersForTaskIdCommand.class, OrganizationalEntity.class);
+        
+        //ProcessInstanceDesc
+        cmdListTypes.put(GetProcessInstanceDescCommand.class, ProcessInstanceDesc.class);
+        
+        //NodeInstanceDesc
+        cmdListTypes.put(GetNodeInstanceDescCommand.class, NodeInstanceDesc.class);
+        
+        //VariableStateDesc
+        cmdListTypes.put(GetVariableStateDescCommand.class, VariableStateDesc.class);
     }
 
     public JaxbCommandsResponse() {
@@ -183,6 +207,24 @@ public class JaxbCommandsResponse {
                     jaxbComment.add(new JaxbComment(comment));
                 }
                 this.responses.add(new JaxbCommentListResponse(jaxbComment, i, cmd));
+            } else if (listType.equals(ProcessInstanceDesc.class)) {
+                List<JaxbProcessInstanceDescResponse> jaxbProcessInstanceDescResponse = new ArrayList<JaxbProcessInstanceDescResponse>();
+                for (ProcessInstanceDesc desc : (List<ProcessInstanceDesc>)result) {
+                    jaxbProcessInstanceDescResponse.add(new JaxbProcessInstanceDescResponse(desc));
+                }
+                this.responses.add(new JaxbProcessInstanceDescListResponse(jaxbProcessInstanceDescResponse,i, cmd));
+            } else if (listType.equals(NodeInstanceDesc.class)) {
+                List<JaxbNodeInstanceDescResponse> jaxbNodeInstanceDescResponse = new ArrayList<JaxbNodeInstanceDescResponse>();
+                for (NodeInstanceDesc desc : (List<NodeInstanceDesc>)result) {
+                    jaxbNodeInstanceDescResponse.add(new JaxbNodeInstanceDescResponse(desc));
+                }
+                this.responses.add(new JaxbNodeInstanceDescListResponse(jaxbNodeInstanceDescResponse,i, cmd));
+            } else if (listType.equals(VariableStateDesc.class)) {
+                List<JaxbVariableStateDescResponse> jaxbVariableStateDescResponse = new ArrayList<JaxbVariableStateDescResponse>();
+                for (VariableStateDesc desc : (List<VariableStateDesc>)result) {
+                    jaxbVariableStateDescResponse.add(new JaxbVariableStateDescResponse(desc));
+                }
+                this.responses.add(new JaxbVariableStateDescListResponse(jaxbVariableStateDescResponse,i, cmd));
             } else {
                 unknownResultType = true;
             }

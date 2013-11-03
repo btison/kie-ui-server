@@ -5,6 +5,7 @@ import java.util.List;
 import org.jboss.btison.kie.services.client.api.command.AcceptedCommands;
 import org.jboss.btison.kie.services.client.serialization.jaxb.JaxbCommandsRequest;
 import org.jboss.btison.kie.services.client.serialization.jaxb.JaxbCommandsResponse;
+import org.jboss.btison.kie.services.command.runtime.process.RuntimeDataServiceCommand;
 import org.jboss.btison.kie.services.remote.cdi.RuntimeProcessRequestBean;
 import org.jboss.resteasy.spi.NotAcceptableException;
 import org.kie.api.command.Command;
@@ -29,8 +30,12 @@ public class RuntimeCommandsRequestUtil {
                             + " instances.");
                 }
                 logger.debug("Processing command " + cmd.getClass().getSimpleName());
-                Object cmdResult = requestBean.doKieSessionOperation(cmd, request.getProcessInstanceId());
-
+                Object cmdResult = null;
+                if (cmd instanceof RuntimeDataServiceCommand<?>) {
+                    cmdResult = requestBean.doRuntimeDataServiceOperation(cmd);
+                } else {
+                    cmdResult = requestBean.doKieSessionOperation(cmd, request.getProcessInstanceId());
+                }
                 if (cmdResult instanceof JaxbExceptionResponse) {
                     Exception e = ((JaxbExceptionResponse) cmdResult).cause;
                     jaxbResponse.addException(e, i, cmd);

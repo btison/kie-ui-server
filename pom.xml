@@ -39,16 +39,26 @@
         <artifactId>kie-services-client</artifactId>
         <version>${bpms.version}</version>
       </dependency>
-    <dependency>
-      <groupId>org.jbpm</groupId>
-      <artifactId>jbpm-kie-services</artifactId>
-      <version>${bpms.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.jbpm</groupId>
-      <artifactId>jbpm-console-ng-business-domain-api</artifactId>
-      <version>${bpms.version}</version>
-    </dependency>
+      <dependency>
+        <groupId>org.jbpm</groupId>
+        <artifactId>jbpm-kie-services</artifactId>
+        <version>${bpms.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jbpm</groupId>
+        <artifactId>jbpm-console-ng-business-domain-api</artifactId>
+        <version>${bpms.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jbpm</groupId>
+        <artifactId>jbpm-console-ng-process-runtime-backend</artifactId>
+        <version>${bpms.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jbpm</groupId>
+        <artifactId>jbpm-console-ng-human-tasks-backend</artifactId>
+        <version>${bpms.version}</version>
+      </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>

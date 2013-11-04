@@ -74,10 +74,12 @@ public class AdditionalRestClient extends AbstractBaseRestClient {
         TaskCommand<Long> command = new AddCommentCommand(taskId, comment);
         JaxbCommandsRequest request = new JaxbCommandsRequest(null, command);
         JaxbCommandsResponse response = TaskClientHolder.taskClient.execute(request);
-        JaxbCommandResponse<?> resp = response.getResponses().get(0);
-        if (resp instanceof JaxbPrimitiveResponse) {
-            Object o = ((JaxbPrimitiveResponse)resp).getResult();
-            return (Long)o;
+        if (response.getResponses() != null && !response.getResponses().isEmpty()) {
+            JaxbCommandResponse<?> resp = response.getResponses().get(0);
+            if (resp instanceof JaxbPrimitiveResponse) {
+                Object o = ((JaxbPrimitiveResponse)resp).getResult();
+                return (Long)o;
+        }
         }
         return 0;
     }
@@ -92,19 +94,21 @@ public class AdditionalRestClient extends AbstractBaseRestClient {
         TaskCommand<List<Comment>> command = new GetAllCommentsByTaskIdCommand(taskId);
         JaxbCommandsRequest request = new JaxbCommandsRequest(null, command);
         JaxbCommandsResponse response = TaskClientHolder.taskClient.execute(request);
-        JaxbCommandResponse<?> resp = response.getResponses().get(0);
-        if (resp != null && resp instanceof JaxbCommentListResponse) {
-            JaxbCommentListResponse commentResp = (JaxbCommentListResponse) resp;
-            List<Comment> commentList = new ArrayList<Comment>();
-            for (JaxbComment jaxbComment : commentResp.getResult()) {
-                CommentImpl comment = new CommentImpl();
-                comment.setAddedAt(jaxbComment.getAddedAt());
-                comment.setId(jaxbComment.getId());
-                comment.setText(jaxbComment.getText());
-                comment.setAddedBy(jaxbComment.getAddedBy());
-                commentList.add(comment);
+        if (response.getResponses() != null && !response.getResponses().isEmpty()) {
+            JaxbCommandResponse<?> resp = response.getResponses().get(0);
+            if (resp instanceof JaxbCommentListResponse) {
+                JaxbCommentListResponse commentResp = (JaxbCommentListResponse) resp;
+                List<Comment> commentList = new ArrayList<Comment>();
+                for (JaxbComment jaxbComment : commentResp.getResult()) {
+                    CommentImpl comment = new CommentImpl();
+                    comment.setAddedAt(jaxbComment.getAddedAt());
+                    comment.setId(jaxbComment.getId());
+                    comment.setText(jaxbComment.getText());
+                    comment.setAddedBy(jaxbComment.getAddedBy());
+                    commentList.add(comment);
+                }
+                return commentList;            
             }
-            return commentList;            
         }
         return new ArrayList<Comment>();
     }
@@ -113,10 +117,11 @@ public class AdditionalRestClient extends AbstractBaseRestClient {
         TaskCommand<Map<Long, List<OrganizationalEntity>>> command = new GetPotentialOwnersForTaskIdCommand(taskIds);
         JaxbCommandsRequest request = new JaxbCommandsRequest(null, command);
         JaxbCommandsResponse response = TaskClientHolder.taskClient.execute(request);
-        JaxbCommandResponse<?> resp = response.getResponses().get(0);
-        if (resp != null && resp instanceof JaxbOrganizationalEntityMapResponse) {
-            JaxbOrganizationalEntityMapResponse orgEntityMap = (JaxbOrganizationalEntityMapResponse) resp;
-            return orgEntityMap.getResult();
+        if (response.getResponses() != null && !response.getResponses().isEmpty()) {
+            JaxbCommandResponse<?> resp = response.getResponses().get(0);
+            if (resp != null && resp instanceof JaxbOrganizationalEntityMapResponse) {
+                return ((JaxbOrganizationalEntityMapResponse) resp).getResult();
+            }
         }
         return new HashMap<Long, List<OrganizationalEntity>>();
     }
@@ -125,10 +130,12 @@ public class AdditionalRestClient extends AbstractBaseRestClient {
         TaskCommand<Long> command = new AddContentCommand(taskId, content);
         JaxbCommandsRequest request = new JaxbCommandsRequest(null, command);
         JaxbCommandsResponse response = TaskClientHolder.taskClient.execute(request);
-        JaxbCommandResponse<?> resp = response.getResponses().get(0);
-        if (resp instanceof JaxbPrimitiveResponse) {
-            Object o = ((JaxbPrimitiveResponse)resp).getResult();
-            return (Long)o;
+        if (response.getResponses() != null && !response.getResponses().isEmpty()) {
+            JaxbCommandResponse<?> resp = response.getResponses().get(0);
+            if (resp instanceof JaxbPrimitiveResponse) {
+                Object o = ((JaxbPrimitiveResponse)resp).getResult();
+                return (Long)o;
+            }
         }
         return 0;
     }

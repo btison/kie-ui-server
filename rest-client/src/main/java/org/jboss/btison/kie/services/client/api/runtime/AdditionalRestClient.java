@@ -67,7 +67,7 @@ public class AdditionalRestClient extends AbstractBaseRestClient {
         GetProcessInstanceDescCommand command = new GetProcessInstanceDescCommand(states, filterText, initiator);
         JaxbCommandsRequest request = new JaxbCommandsRequest(null, command);
         JaxbCommandsResponse response = RuntimeClientHolder.runtimeClient.execute(request);
-        if (!response.getResponses().isEmpty()) {
+        if (response.getResponses() != null && !response.getResponses().isEmpty()) {
             JaxbCommandResponse<?> resp = response.getResponses().get(0);
             if (resp instanceof JaxbProcessInstanceDescListResponse) {
                 List<ProcessInstanceDesc> result = new ArrayList<ProcessInstanceDesc>();
@@ -84,7 +84,7 @@ public class AdditionalRestClient extends AbstractBaseRestClient {
         GetProcessInstanceDescCommand command = new GetProcessInstanceDescCommand(processInstanceId);
         JaxbCommandsRequest request = new JaxbCommandsRequest(null, command);
         JaxbCommandsResponse response = RuntimeClientHolder.runtimeClient.execute(request);
-        if (!response.getResponses().isEmpty()) {
+        if (response.getResponses() != null && !response.getResponses().isEmpty()) {
             JaxbCommandResponse<?> resp = response.getResponses().get(0);
             if (resp instanceof JaxbProcessInstanceDescListResponse) {
                 List<JaxbProcessInstanceDescResponse> descResponse = ((JaxbProcessInstanceDescListResponse)resp).getResult();
@@ -100,7 +100,7 @@ public class AdditionalRestClient extends AbstractBaseRestClient {
         GetNodeInstanceDescCommand command = new GetNodeInstanceDescCommand(processInstanceId, completed, active);
         JaxbCommandsRequest request = new JaxbCommandsRequest(null, command);
         JaxbCommandsResponse response = RuntimeClientHolder.runtimeClient.execute(request);
-        if (!response.getResponses().isEmpty()) {
+        if (response.getResponses() != null && !response.getResponses().isEmpty()) {
             JaxbCommandResponse<?> resp = response.getResponses().get(0);
             if (resp instanceof JaxbNodeInstanceDescListResponse) {
                 List<NodeInstanceDesc> result = new ArrayList<NodeInstanceDesc>();
@@ -117,7 +117,7 @@ public class AdditionalRestClient extends AbstractBaseRestClient {
         GetVariableStateDescCommand command = new GetVariableStateDescCommand(processInstanceId, variableId);
         JaxbCommandsRequest request = new JaxbCommandsRequest(null, command);
         JaxbCommandsResponse response = RuntimeClientHolder.runtimeClient.execute(request);
-        if (!response.getResponses().isEmpty()) {
+        if (response.getResponses() != null && !response.getResponses().isEmpty()) {
             JaxbCommandResponse<?> resp = response.getResponses().get(0);
             if (resp instanceof JaxbVariableStateDescListResponse) {
                 List<VariableStateDesc> result = new ArrayList<VariableStateDesc>();

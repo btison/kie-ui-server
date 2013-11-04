@@ -28,7 +28,7 @@ public class RestClient extends AbstractBaseRestClient {
         StartProcessCommand command = new StartProcessCommand(processId, objectMap);
         JaxbCommandsRequest request = new JaxbCommandsRequest(domainName, command);
         JaxbCommandsResponse response = RuntimeClientHolder.runtimeClient.execute(domainName, request);
-        if (!response.getResponses().isEmpty() && response.getResponses().get(0) instanceof JaxbProcessInstanceResponse) {
+        if (response.getResponses() != null && !response.getResponses().isEmpty() && response.getResponses().get(0) instanceof JaxbProcessInstanceResponse) {
             JaxbProcessInstanceResponse resp = (JaxbProcessInstanceResponse) response.getResponses().get(0);
             return resp.getId();
         }        

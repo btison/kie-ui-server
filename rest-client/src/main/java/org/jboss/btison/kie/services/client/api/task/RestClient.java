@@ -72,25 +72,25 @@ public class RestClient extends AbstractBaseRestClient {
     
     public Long addTask(Task task, Map<String, Object> params) {        
         TaskCommand<Long> command = new AddTaskCommand(task, params);
-        JaxbCommandsRequest request = new JaxbCommandsRequest(null, command);
-        
+        JaxbCommandsRequest request = new JaxbCommandsRequest(null, command);        
         JaxbCommandsResponse response = TaskClientHolder.taskClient.execute(request);
-        
-        if (response.getResponses().get(0) instanceof JaxbPrimitiveResponse) {
-            return (Long) ((JaxbPrimitiveResponse)response.getResponses().get(0)).getResult();
+        if (response.getResponses() != null && !response.getResponses().isEmpty()) {
+            if (response.getResponses().get(0) instanceof JaxbPrimitiveResponse) {
+                return (Long) ((JaxbPrimitiveResponse)response.getResponses().get(0)).getResult();
+            }
         }
         return new Long(0);
     }
     
     public Long addTask(Task task, ContentData data) {        
         TaskCommand<Long> command = new AddTaskCommand(task, data);
-        JaxbCommandsRequest request = new JaxbCommandsRequest(null, command);
-        
+        JaxbCommandsRequest request = new JaxbCommandsRequest(null, command);        
         JaxbCommandsResponse response = TaskClientHolder.taskClient.execute(request);
-        
-        if (response.getResponses().get(0) instanceof JaxbPrimitiveResponse) {
-            return (Long) ((JaxbPrimitiveResponse)response.getResponses().get(0)).getResult();
-        }        
+        if (response.getResponses() != null && !response.getResponses().isEmpty()) {
+            if (response.getResponses().get(0) instanceof JaxbPrimitiveResponse) {
+                return (Long) ((JaxbPrimitiveResponse)response.getResponses().get(0)).getResult();
+            }  
+        }
         return new Long(0);
     }
     
@@ -203,20 +203,24 @@ public class RestClient extends AbstractBaseRestClient {
         TaskCommand<List<TaskSummary>> command = new GetTaskAssignedAsPotentialOwnerCommand(userId, language, status);
         JaxbCommandsRequest request = new JaxbCommandsRequest(null, command);
         JaxbCommandsResponse response = TaskClientHolder.taskClient.execute(request);
-        if (!response.getResponses().isEmpty()  && response.getResponses().get(0) instanceof JaxbTaskSummaryListResponse) {
-            JaxbTaskSummaryListResponse taskSummaryListResponse = (JaxbTaskSummaryListResponse) response.getResponses().get(0);
-            return taskSummaryListResponse.getResult();
+        if (response.getResponses() != null && !response.getResponses().isEmpty()) {
+            if (response.getResponses().get(0) instanceof JaxbTaskSummaryListResponse) {
+                JaxbTaskSummaryListResponse taskSummaryListResponse = (JaxbTaskSummaryListResponse) response.getResponses().get(0);
+                return taskSummaryListResponse.getResult();
+            }
         }
         return new ArrayList<TaskSummary>();
     }
-    
+
     public List<TaskSummary> getTasksOwnedByStatus(String userId, List<Status> status, String language) {
         TaskCommand<List<TaskSummary>> command = new GetTasksOwnedCommand(userId, language, status);
         JaxbCommandsRequest request = new JaxbCommandsRequest(null, command);
         JaxbCommandsResponse response = TaskClientHolder.taskClient.execute(request);
-        if (!response.getResponses().isEmpty()  && response.getResponses().get(0) instanceof JaxbTaskSummaryListResponse) {
-            JaxbTaskSummaryListResponse taskSummaryListResponse = (JaxbTaskSummaryListResponse) response.getResponses().get(0);
-            return taskSummaryListResponse.getResult();
+        if (response.getResponses() != null && !response.getResponses().isEmpty()) {
+            if (response.getResponses().get(0) instanceof JaxbTaskSummaryListResponse) {
+                JaxbTaskSummaryListResponse taskSummaryListResponse = (JaxbTaskSummaryListResponse) response.getResponses().get(0);
+                return taskSummaryListResponse.getResult();
+            }
         }
         return new ArrayList<TaskSummary>();        
     }

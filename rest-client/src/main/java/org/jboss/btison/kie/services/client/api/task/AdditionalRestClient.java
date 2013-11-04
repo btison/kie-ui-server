@@ -10,6 +10,7 @@ import org.jboss.btison.kie.services.client.api.AbstractBaseRestClient;
 import org.jboss.btison.kie.services.client.serialization.jaxb.JaxbCommandsRequest;
 import org.jboss.btison.kie.services.client.serialization.jaxb.JaxbCommandsResponse;
 import org.jboss.btison.kie.services.client.serialization.jaxb.impl.JaxbCommentListResponse;
+import org.jboss.btison.kie.services.client.serialization.jaxb.impl.JaxbContentResponse;
 import org.jboss.btison.kie.services.client.serialization.jaxb.impl.JaxbOrganizationalEntityMapResponse;
 import org.jboss.btison.kie.services.task.command.AddCommentCommand;
 import org.jboss.btison.kie.services.task.command.AddContentCommand;
@@ -21,10 +22,14 @@ import org.jboss.btison.kie.services.task.command.SetExpirationDateCommand;
 import org.jboss.btison.kie.services.task.command.SetPriorityCommand;
 import org.jboss.btison.kie.services.task.command.SetTaskNamesCommand;
 import org.jboss.resteasy.client.ProxyFactory;
+import org.jbpm.services.task.commands.GetContentCommand;
 import org.jbpm.services.task.commands.TaskCommand;
 import org.jbpm.services.task.impl.model.CommentImpl;
+import org.jbpm.services.task.impl.model.ContentImpl;
 import org.jbpm.services.task.impl.model.xml.JaxbComment;
+import org.jbpm.services.task.impl.model.xml.JaxbContent;
 import org.kie.api.task.model.Comment;
+import org.kie.api.task.model.Content;
 import org.kie.api.task.model.I18NText;
 import org.kie.api.task.model.OrganizationalEntity;
 import org.kie.services.client.serialization.jaxb.impl.JaxbCommandResponse;
@@ -126,5 +131,22 @@ public class AdditionalRestClient extends AbstractBaseRestClient {
             return (Long)o;
         }
         return 0;
+    }
+    
+    public Content getContentById(long contentId) {
+        TaskCommand<Content> command = new GetContentCommand(contentId);
+        JaxbCommandsRequest request = new JaxbCommandsRequest(null, command);
+        JaxbCommandsResponse response = TaskClientHolder.taskClient.execute(request);
+        if (response.getResponses() != null && !response.getResponses().isEmpty()) {
+            JaxbCommandResponse<?> resp = response.getResponses().get(0);
+            if (resp instanceof JaxbContentResponse) {
+                JaxbContent jaxbContent = ((JaxbContentResponse)resp).getResult(); 
+                ContentImpl content = new ContentImpl();
+                content.setId(jaxbContent.getId());
+                content.setContent(jaxbContent.getContent());
+                return content;                
+            }
+        }
+        return null;        
     }
 }

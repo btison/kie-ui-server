@@ -25,6 +25,7 @@ import org.jboss.btison.kie.services.task.command.SetDescriptionsCommand;
 import org.jboss.btison.kie.services.task.command.SetExpirationDateCommand;
 import org.jboss.btison.kie.services.task.command.SetPriorityCommand;
 import org.jboss.btison.kie.services.task.command.SetTaskNamesCommand;
+import org.jbpm.services.task.commands.GetContentCommand;
 import org.jbpm.services.task.commands.TaskCommand;
 import org.kie.api.command.Command;
 
@@ -53,7 +54,8 @@ public class JaxbCommandsRequest {
             @XmlElement(name = "task-delete-comment", type = DeleteCommentCommand.class),
             @XmlElement(name = "task-get-all-comments", type = GetAllCommentsByTaskIdCommand.class),
             @XmlElement(name = "get-potential-owners", type = GetPotentialOwnersForTaskIdCommand.class),
-            @XmlElement(name = "task-add-content", type = AddContentCommand.class),
+            @XmlElement(name = "task-add-content", type = AddContentCommand.class),            
+            @XmlElement(name = "task-get-content", type = GetContentCommand.class),
             
             @XmlElement(name = "abort-process-instance", type = AbortProcessInstanceCommand.class),
             @XmlElement(name = "signal-event", type = SignalEventCommand.class),

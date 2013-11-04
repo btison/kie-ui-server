@@ -19,6 +19,7 @@ import org.jboss.btison.kie.services.task.command.SetDescriptionsCommand;
 import org.jboss.btison.kie.services.task.command.SetExpirationDateCommand;
 import org.jboss.btison.kie.services.task.command.SetPriorityCommand;
 import org.jboss.btison.kie.services.task.command.SetTaskNamesCommand;
+import org.jbpm.services.task.commands.GetContentCommand;
 
 @SuppressWarnings("rawtypes")
 public class AcceptedCommands {
@@ -39,6 +40,7 @@ public class AcceptedCommands {
         acceptedCommands.add(GetAllCommentsByTaskIdCommand.class);
         acceptedCommands.add(GetPotentialOwnersForTaskIdCommand.class);
         acceptedCommands.add(AddContentCommand.class);
+        acceptedCommands.add(GetContentCommand.class);
         
         acceptedCommands.add(SetProcessInstanceVariablesCommand.class);
         

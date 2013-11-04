@@ -16,6 +16,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.drools.core.command.runtime.process.GetProcessInstancesCommand;
 import org.drools.core.common.DefaultFactHandle;
 import org.jboss.btison.kie.services.client.serialization.jaxb.impl.JaxbCommentListResponse;
+import org.jboss.btison.kie.services.client.serialization.jaxb.impl.JaxbContentResponse;
 import org.jboss.btison.kie.services.client.serialization.jaxb.impl.JaxbNodeInstanceDescListResponse;
 import org.jboss.btison.kie.services.client.serialization.jaxb.impl.JaxbNodeInstanceDescResponse;
 import org.jboss.btison.kie.services.client.serialization.jaxb.impl.JaxbOrganizationalEntityMapResponse;
@@ -38,10 +39,12 @@ import org.jbpm.services.task.commands.GetTasksByProcessInstanceIdCommand;
 import org.jbpm.services.task.commands.GetTasksByStatusByProcessInstanceIdCommand;
 import org.jbpm.services.task.commands.GetTasksOwnedCommand;
 import org.jbpm.services.task.impl.model.xml.JaxbComment;
+import org.jbpm.services.task.impl.model.xml.JaxbContent;
 import org.kie.api.command.Command;
 import org.kie.api.runtime.process.ProcessInstance;
 import org.kie.api.runtime.process.WorkItem;
 import org.kie.api.task.model.Comment;
+import org.kie.api.task.model.Content;
 import org.kie.api.task.model.OrganizationalEntity;
 import org.kie.api.task.model.Task;
 import org.kie.api.task.model.TaskSummary;
@@ -82,6 +85,7 @@ public class JaxbCommandsResponse {
             @XmlElement(name = "task-summary-list", type = JaxbTaskSummaryListResponse.class),
             @XmlElement(name = "work-item", type = JaxbWorkItem.class),
             @XmlElement(name = "task-comment-list", type = JaxbCommentListResponse.class),
+            @XmlElement(name = "task-content", type = JaxbContentResponse.class),
             @XmlElement(name = "organizational-entity-map", type= JaxbOrganizationalEntityMapResponse.class),
             @XmlElement(name = "process-instance-desc-list", type= JaxbProcessInstanceDescListResponse.class),
             @XmlElement(name = "node-instance-desc-list", type= JaxbNodeInstanceDescListResponse.class),
@@ -188,6 +192,9 @@ public class JaxbCommandsResponse {
             this.responses.add(new JaxbProcessInstanceResponse((ProcessInstance) result, i, cmd));
         } else if (result instanceof Task) {
             this.responses.add(new JaxbTaskResponse((Task) result, i, cmd));
+        } else if (result instanceof Content) {
+            JaxbContent jaxbContent = new JaxbContent((Content) result);
+            this.responses.add(new JaxbContentResponse(jaxbContent, i, cmd));
         } else if (List.class.isInstance(result)) { 
             // Neccessary to determine return type of empty lists
             Class listType = cmdListTypes.get(cmd.getClass());

@@ -22,6 +22,10 @@ public class GetVariableStateDescCommand extends RuntimeDataServiceCommand<Colle
     public GetVariableStateDescCommand() {
     }
     
+    public GetVariableStateDescCommand(Long processInstanceId) {
+        this.processInstanceId = processInstanceId;
+    }
+    
     public GetVariableStateDescCommand(Long processInstanceId, String variableId) {
         this.processInstanceId = processInstanceId;
         this.variableId = variableId;
@@ -30,7 +34,11 @@ public class GetVariableStateDescCommand extends RuntimeDataServiceCommand<Colle
     @Override
     public Collection<VariableStateDesc> execute(Context context) {
         RuntimeDataService dataService = ((RuntimeDataServiceCommandContext) context).getDataService();
-        return dataService.getVariableHistory(processInstanceId, variableId);
+        if (variableId == null || variableId.isEmpty()) {
+            return dataService.getVariablesCurrentState(processInstanceId);
+        } else {        
+            return dataService.getVariableHistory(processInstanceId, variableId);
+        }
     }
 
 }

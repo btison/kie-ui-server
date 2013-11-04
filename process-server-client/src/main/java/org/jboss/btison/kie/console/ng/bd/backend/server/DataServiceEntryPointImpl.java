@@ -164,8 +164,9 @@ public class DataServiceEntryPointImpl implements DataServiceEntryPoint {
     @Override
     public Collection<VariableSummary> getVariablesCurrentState(long processInstanceId, String processId) {
         Map<String, String> properties = new HashMap<String, String>(bpmn2Service.getProcessData(processId));
-        return VariableHelper.adaptCollection(dataService.getVariablesCurrentState(processInstanceId), properties,
-                processInstanceId);
+        AdditionalRestClient restClient = new AdditionalRestClient();
+        Collection<VariableStateDesc> result = restClient.getVariableStateDesc(processInstanceId, null);
+        return VariableHelper.adaptCollection(result, properties,processInstanceId);
     }
 
     @Override

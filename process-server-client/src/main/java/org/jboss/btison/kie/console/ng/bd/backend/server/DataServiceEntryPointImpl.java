@@ -8,7 +8,6 @@ import java.util.Map;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import org.jboss.btison.kie.services.client.api.runtime.AdditionalRestClient;
 import org.jboss.errai.bus.server.annotations.Service;
 import org.jboss.seam.transaction.Transactional;
 import org.jbpm.console.ng.bd.service.DataServiceEntryPoint;
@@ -24,9 +23,7 @@ import org.jbpm.console.ng.pr.model.ProcessSummary;
 import org.jbpm.console.ng.pr.model.VariableSummary;
 import org.jbpm.kie.services.api.RuntimeDataService;
 import org.jbpm.kie.services.api.bpmn2.BPMN2DataService;
-import org.jbpm.kie.services.impl.model.NodeInstanceDesc;
 import org.jbpm.kie.services.impl.model.ProcessInstanceDesc;
-import org.jbpm.kie.services.impl.model.VariableStateDesc;
 
 @Service
 @ApplicationScoped
@@ -41,12 +38,12 @@ public class DataServiceEntryPointImpl implements DataServiceEntryPoint {
 
     @Override
     public Collection<ProcessInstanceSummary> getProcessInstances() {
-        throw new UnsupportedOperationException("Not implemented");
+        return ProcessInstanceHelper.adaptCollection(dataService.getProcessInstances());
     }
 
     @Override
     public Collection<ProcessInstanceSummary> getProcessInstancesByDeploymentId(String deploymentId, List<Integer> states) {
-        throw new UnsupportedOperationException("Not implemented");
+        return ProcessInstanceHelper.adaptCollection(dataService.getProcessInstancesByDeploymentId(deploymentId, states));
     }
 
     @Override
@@ -56,9 +53,7 @@ public class DataServiceEntryPointImpl implements DataServiceEntryPoint {
 
     @Override
     public ProcessInstanceSummary getProcessInstanceById(long processInstanceId) {
-        AdditionalRestClient restClient = new AdditionalRestClient();
-        ProcessInstanceDesc desc = restClient.getProcessInstanceDescById(processInstanceId);
-        return ProcessInstanceHelper.adapt(desc);
+        return ProcessInstanceHelper.adapt(dataService.getProcessInstanceById(processInstanceId));
     }
 
     @Override
@@ -73,53 +68,51 @@ public class DataServiceEntryPointImpl implements DataServiceEntryPoint {
 
     @Override
     public Collection<ProcessInstanceSummary> getProcessInstancesByProcessDefinition(String processDefId) {
-        throw new UnsupportedOperationException("Not implemented");
+        return ProcessInstanceHelper.adaptCollection(dataService.getProcessInstancesByProcessDefinition(processDefId));
     }
 
     @Override
     public Collection<NodeInstanceSummary> getProcessInstanceHistory(long processInstanceId) {
-        AdditionalRestClient restClient = new AdditionalRestClient();
-        Collection<NodeInstanceDesc> result = restClient.getProcessInstanceHistoryLog(processInstanceId, false, false);
-        return NodeInstanceHelper.adaptCollection(result);
+        return NodeInstanceHelper.adaptCollection(dataService.getProcessInstanceHistory(null, processInstanceId));
     }
 
     @Override
     public Collection<NodeInstanceSummary> getProcessInstanceHistory(long processInstanceId, boolean completed) {
-        throw new UnsupportedOperationException("Not implemented");
+        return NodeInstanceHelper.adaptCollection(dataService.getProcessInstanceHistory(null,
+                processInstanceId, completed));
     }
 
     @Override
     public Collection<NodeInstanceSummary> getProcessInstanceFullHistory(long processInstanceId) {
-        throw new UnsupportedOperationException("Not implemented");
+        return NodeInstanceHelper.adaptCollection(dataService.getProcessInstanceFullHistory(null, processInstanceId));
     }
 
     @Override
     public Collection<NodeInstanceSummary> getProcessInstanceActiveNodes(long processInstanceId) {
-        AdditionalRestClient restClient = new AdditionalRestClient();
-        Collection<NodeInstanceDesc> result = restClient.getProcessInstanceHistoryLog(processInstanceId, false, true);
-        return NodeInstanceHelper.adaptCollection(result);
+        return NodeInstanceHelper.adaptCollection(dataService.getProcessInstanceActiveNodes(null, processInstanceId));
     }
 
     @Override
     public Collection<ProcessInstanceSummary> getProcessInstances(List<Integer> states, String filterText, String initiator) {
-        AdditionalRestClient restClient = new AdditionalRestClient();
-        Collection<ProcessInstanceDesc> result =  restClient.getProcessInstanceDesc(states, filterText, initiator);
-        
+        Collection<ProcessInstanceDesc> result = null;
+        if (!filterText.equals("")) {
+            // search by process name
+            result = dataService.getProcessInstancesByProcessName(states, filterText, initiator);
+        } else {
+            result = dataService.getProcessInstances(states, initiator);
+        }
+
         return ProcessInstanceHelper.adaptCollection(result);
     }
 
     @Override
     public Collection<NodeInstanceSummary> getProcessInstanceCompletedNodes(long processInstanceId) {
-        AdditionalRestClient restClient = new AdditionalRestClient();
-        Collection<NodeInstanceDesc> result = restClient.getProcessInstanceHistoryLog(processInstanceId, true, false);
-        return NodeInstanceHelper.adaptCollection(result);
+        return NodeInstanceHelper.adaptCollection(dataService.getProcessInstanceCompletedNodes(null, processInstanceId));
     }
 
     @Override
     public Collection<VariableSummary> getVariableHistory(long processInstanceId, String variableId) {
-        AdditionalRestClient restClient = new AdditionalRestClient();
-        Collection<VariableStateDesc> result = restClient.getVariableStateDesc(processInstanceId, variableId);
-        return VariableHelper.adaptCollection(result);
+        return VariableHelper.adaptCollection(dataService.getVariableHistory(processInstanceId, variableId));
     }
 
     /*
@@ -164,9 +157,8 @@ public class DataServiceEntryPointImpl implements DataServiceEntryPoint {
     @Override
     public Collection<VariableSummary> getVariablesCurrentState(long processInstanceId, String processId) {
         Map<String, String> properties = new HashMap<String, String>(bpmn2Service.getProcessData(processId));
-        AdditionalRestClient restClient = new AdditionalRestClient();
-        Collection<VariableStateDesc> result = restClient.getVariableStateDesc(processInstanceId, null);
-        return VariableHelper.adaptCollection(result, properties,processInstanceId);
+        return VariableHelper.adaptCollection(dataService.getVariablesCurrentState(processInstanceId), properties,
+                processInstanceId);
     }
 
     @Override

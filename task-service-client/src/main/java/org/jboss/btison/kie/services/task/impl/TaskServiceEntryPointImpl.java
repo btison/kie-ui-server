@@ -1,7 +1,6 @@
 package org.jboss.btison.kie.services.task.impl;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,8 +8,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
-import org.jboss.btison.kie.services.client.api.task.AdditionalRestClient;
-import org.jboss.btison.kie.services.client.api.task.RestClient;
 import org.jboss.btison.kie.services.task.commands.TaskContext;
 import org.jboss.seam.transaction.Transactional;
 import org.jbpm.services.task.commands.TaskCommand;
@@ -201,14 +198,10 @@ public class TaskServiceEntryPointImpl implements InternalTaskService, EventServ
     }
 
     public List<User> getUsers() {
-        //called by method org.jbpm.console.ng.ht.backend.server.TaskServiceEntryPointImplgetOrganizationalEntities, 
-        //but this method seems not to be used
         return taskIdentityService.getUsers();
     }
 
     public List<Group> getGroups() {
-        //called by method org.jbpm.console.ng.ht.backend.server.TaskServiceEntryPointImplgetOrganizationalEntities, 
-        //but this method seems not to be used
         return taskIdentityService.getGroups();
     }
 
@@ -225,8 +218,7 @@ public class TaskServiceEntryPointImpl implements InternalTaskService, EventServ
     }
 
     public void claim(long taskId, String userId) {
-        RestClient restClient = new RestClient();
-        restClient.claimTask(taskId, userId);
+        taskInstanceService.claim(taskId, userId);
     }
 
     public void claim(long taskId, String userId, List<String> groupIds) {
@@ -242,13 +234,11 @@ public class TaskServiceEntryPointImpl implements InternalTaskService, EventServ
     }
 
     public void complete(long taskId, String userId, Map<String, Object> data) {
-        RestClient restClient = new RestClient();
-        restClient.completeTask(taskId, userId, data);
+        taskInstanceService.complete(taskId, userId, data);
     }
 
     public void delegate(long taskId, String userId, String targetUserId) {
-        RestClient restClient = new RestClient();
-        restClient.delegateTask(taskId, userId, targetUserId);
+        taskInstanceService.delegate(taskId, userId, targetUserId);
     }
 
     public void deleteFault(long taskId, String userId) {
@@ -268,13 +258,11 @@ public class TaskServiceEntryPointImpl implements InternalTaskService, EventServ
     }
 
     public void forward(long taskId, String userId, String targetEntityId) {
-        RestClient restClient = new RestClient();
-        restClient.forwardTask(taskId, userId, targetEntityId);
+        taskInstanceService.forward(taskId, userId, targetEntityId);
     }
 
     public void release(long taskId, String userId) {
-        RestClient restClient = new RestClient();
-        restClient.releaseTask(taskId, userId);
+        taskInstanceService.release(taskId, userId);
     }
 
     public void remove(long taskId, String userId) {
@@ -294,8 +282,7 @@ public class TaskServiceEntryPointImpl implements InternalTaskService, EventServ
     }
 
     public void setPriority(long taskId, int priority) {
-        AdditionalRestClient restClient = new AdditionalRestClient();
-        restClient.setPriority(taskId, priority);
+        taskInstanceService.setPriority(taskId, priority);
     }
 
     public void skip(long taskId, String userId) {
@@ -303,8 +290,7 @@ public class TaskServiceEntryPointImpl implements InternalTaskService, EventServ
     }
 
     public void start(long taskId, String userId) {
-        RestClient restClient = new RestClient();
-        restClient.startTask(taskId, userId);
+        taskInstanceService.start(taskId, userId);
     }
 
     public void stop(long taskId, String userId) {
@@ -353,18 +339,15 @@ public class TaskServiceEntryPointImpl implements InternalTaskService, EventServ
     }
 
     public Map<Long, List<OrganizationalEntity>> getPotentialOwnersForTaskIds(List<Long> taskIds) {
-        AdditionalRestClient restClient = new AdditionalRestClient();
-        return restClient.getPotentialOwnersForTaskIds(taskIds);
+        return taskQueryService.getPotentialOwnersForTaskIds(taskIds);
     }
 
     public List<TaskSummary> getTasksOwnedByStatus(String userId, List<Status> status, String language) {
-        RestClient restClient = new RestClient();
-        return restClient.getTasksOwnedByStatus(userId, status, language);
+        return taskQueryService.getTasksOwnedByStatus(userId, status, language);
     }
 
     public List<TaskSummary> getTasksAssignedAsPotentialOwnerByStatus(String userId, List<Status> status, String language) {
-        RestClient restClient = new RestClient();
-        return restClient.getTasksAssignedAsPotentialOwnerByStatus(userId, status, language);
+        return taskQueryService.getTasksAssignedAsPotentialOwnerByStatus(userId, status, language);
     }
 
     public List<TaskSummary> getTasksAssignedAsPotentialOwnerByStatusByGroup(String userId, List<String> groupIds, List<Status> status, String language) {
@@ -380,8 +363,7 @@ public class TaskServiceEntryPointImpl implements InternalTaskService, EventServ
     }
 
     public Task getTaskById(long taskId) {
-        RestClient restClient = new RestClient();
-        return restClient.getTaskById(taskId);
+        return taskQueryService.getTaskInstanceById(taskId);
     }
 
     public Task getTaskByWorkItemId(long workItemId) {
@@ -393,13 +375,11 @@ public class TaskServiceEntryPointImpl implements InternalTaskService, EventServ
     }
 
     public long addTask(Task task, Map<String, Object> params) {     
-        RestClient client = new RestClient();
-        return client.addTask(task, params);
+        return taskInstanceService.addTask(task, params);
     }
 
     public long addTask(Task task, ContentData data){   
-        RestClient client = new RestClient();
-        return client.addTask(task, data);
+        return taskInstanceService.addTask(task, data);
     }
 
     public void setTaskDefService(TaskDefService taskDefService) {
@@ -455,35 +435,22 @@ public class TaskServiceEntryPointImpl implements InternalTaskService, EventServ
     }
 
     public long addContent(long taskId, Content content) {
-        //used by org.jbpm.console.ng.ht.backend.server.TaskServiceEntryPointImpl
-        //not in org.jbpm.console.ng.ht.service.TaskServiceEntryPoint --> not used?
-        //no command available
         return this.taskContentService.addContent(taskId, content);
     }
 
     public long addContent(long taskId, Map<String, Object> params) {
-        AdditionalRestClient restClient = new AdditionalRestClient();
-        return restClient.addContent(taskId, params);
+        return taskContentService.addContent(taskId, params);
     }
 
     public void deleteContent(long taskId, long contentId) {
-        //called by org.jbpm.console.ng.ht.backend.server.TaskServiceEntryPointImpl
-        //method not in org.jbpm.console.ng.ht.service.TaskServiceEntryPoint interface
-        //no command available
         this.taskContentService.deleteContent(taskId, contentId);
     }
 
     public List<Content> getAllContentByTaskId(long taskId) {
-        //called by org.jbpm.console.ng.ht.backend.server.TaskServiceEntryPointImpl
-        //method not in org.jbpm.console.ng.ht.service.TaskServiceEntryPoint
-        //no command available
         return this.taskContentService.getAllContentByTaskId(taskId);
     }
 
     public Content getContentById(long contentId) {
-        //called by org.jbpm.console.ng.ht.backend.server.TaskServiceEntryPointImpl
-        //method in org.jbpm.console.ng.ht.service.TaskServiceEntryPoint interface, but seems not to be used
-        //no command available
         return this.taskContentService.getContentById(contentId);
     }
 
@@ -512,68 +479,42 @@ public class TaskServiceEntryPointImpl implements InternalTaskService, EventServ
     }
 
     public OrganizationalEntity getOrganizationalEntityById(String entityId) {
-        //called by org.jbpm.console.ng.ht.backend.server.TaskServiceEntryPointImpl
-        //method in org.jbpm.console.ng.ht.service.TaskServiceEntryPoint interface, but seems not to be used
-        //no command available
         return taskIdentityService.getOrganizationalEntityById(entityId);
     }
 
     public void setExpirationDate(long taskId, Date date) {
-        AdditionalRestClient restClient = new AdditionalRestClient();
-        restClient.setExpirationDate(taskId, date);
+        taskInstanceService.setExpirationDate(taskId, date);
     }
 
     public void setDescriptions(long taskId, List<I18NText> descriptions) {
-        AdditionalRestClient restClient = new AdditionalRestClient();
-        restClient.setDescriptions(taskId, descriptions);
+        taskInstanceService.setDescriptions(taskId, descriptions);
     }
 
     public void setSkipable(long taskId, boolean skipable) {
-        //called by org.jbpm.console.ng.ht.backend.server.TaskServiceEntryPointImpl
-        //method in org.jbpm.console.ng.ht.service.TaskServiceEntryPoint interface, but seems not to be used
-        //no command available
         taskInstanceService.setSkipable(taskId, skipable);
     }
 
     public void setSubTaskStrategy(long taskId, SubTasksStrategy strategy) {
-        //called used by org.jbpm.console.ng.ht.backend.server.TaskServiceEntryPointImpl
-        //method in org.jbpm.console.ng.ht.service.TaskServiceEntryPoint interface, but seems not to be used
-        //no command available
         taskInstanceService.setSubTaskStrategy(taskId, strategy);
     }
 
     public int getPriority(long taskId) {
-        //called by org.jbpm.console.ng.ht.backend.server.TaskServiceEntryPointImpl
-        //method in org.jbpm.console.ng.ht.service.TaskServiceEntryPoint interface, but seems not to be used
-        //no command available
         return taskInstanceService.getPriority(taskId);
     }
 
     public Date getExpirationDate(long taskId) {
-        //called by org.jbpm.console.ng.ht.backend.server.TaskServiceEntryPointImpl
-        //method in org.jbpm.console.ng.ht.service.TaskServiceEntryPoint interface, but seems not to be used
-        //no command available
         return taskInstanceService.getExpirationDate(taskId);
     }
 
     public List<I18NText> getDescriptions(long taskId) {
-        //called by org.jbpm.console.ng.ht.backend.server.TaskServiceEntryPointImpl
-        //method in org.jbpm.console.ng.ht.service.TaskServiceEntryPoint interface, but seems not to be used
-        //no command available
         return taskInstanceService.getDescriptions(taskId);
     }
 
     public boolean isSkipable(long taskId) {
-        //called by org.jbpm.console.ng.ht.backend.server.TaskServiceEntryPointImpl
-        //method in org.jbpm.console.ng.ht.service.TaskServiceEntryPoint interface, but seems not to be used
-        //no command available
         return taskInstanceService.isSkipable(taskId);
     }
 
     public SubTasksStrategy getSubTaskStrategy(long taskId) {
-        //called by org.jbpm.console.ng.ht.backend.server.TaskServiceEntryPointImpl
-        //method in org.jbpm.console.ng.ht.service.TaskServiceEntryPoint interface, but seems not to be used
-        //no command available
         return taskInstanceService.getSubTaskStrategy(taskId);
     }
 
@@ -598,30 +539,23 @@ public class TaskServiceEntryPointImpl implements InternalTaskService, EventServ
     }
 
     public long addComment(long taskId, Comment comment) {
-        AdditionalRestClient restClient = new AdditionalRestClient();
-        return restClient.addComment(taskId, comment);
+        return taskCommentService.addComment(taskId, comment);
     }
 
     public void deleteComment(long taskId, long commentId) {
-        AdditionalRestClient restClient = new AdditionalRestClient();
-        restClient.deleteComment(taskId, commentId);
+        taskCommentService.deleteComment(taskId, commentId);
     }
 
     public List<Comment> getAllCommentsByTaskId(long taskId) {
-        AdditionalRestClient restClient = new AdditionalRestClient();
-        return restClient.getAllCommentsByTaskId(taskId);
+        return taskCommentService.getAllCommentsByTaskId(taskId);
     }
 
     public Comment getCommentById(long commentId) {
-        //called by org.jbpm.console.ng.ht.backend.server.TaskServiceEntryPointImpl
-        //method in org.jbpm.console.ng.ht.service.TaskServiceEntryPoint interface, but seems not to be used
-        //no command available
         return taskCommentService.getCommentById(commentId);
     }
 
     public void setTaskNames(long taskId, List<I18NText> taskName) {
-        AdditionalRestClient restClient = new AdditionalRestClient();
-        restClient.setTaskNames(taskId, taskName);
+        taskInstanceService.setTaskNames(taskId, taskName);
     }
 
     @SuppressWarnings("unchecked")
@@ -647,7 +581,6 @@ public class TaskServiceEntryPointImpl implements InternalTaskService, EventServ
 
     @Override
     public List<TaskSummary> getTasksAssignedAsPotentialOwnerByExpirationDateOptional(String userId, List<Status> statuses, Date expirationDate) {
-        //called by org.jbpm.console.ng.ht.backend.server.TaskServiceEntryPointImpl
         return taskQueryService.getTasksAssignedAsPotentialOwnerByExpirationDateOptional(userId, statuses, expirationDate);
     }
 

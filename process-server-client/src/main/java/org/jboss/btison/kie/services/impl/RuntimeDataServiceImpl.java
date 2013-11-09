@@ -94,7 +94,8 @@ public class RuntimeDataServiceImpl implements RuntimeDataService {
     
     @Override
     public Collection<ProcessInstanceDesc> getProcessInstancesByDeploymentId(String deploymentId, List<Integer> states) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        AdditionalRestClient restClient = new AdditionalRestClient();
+        return restClient.getProcessInstanceDesc(deploymentId, states);
     }
 
     @Override

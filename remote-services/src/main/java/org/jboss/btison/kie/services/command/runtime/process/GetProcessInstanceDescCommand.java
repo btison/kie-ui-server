@@ -28,6 +28,9 @@ public class GetProcessInstanceDescCommand extends RuntimeDataServiceCommand<Col
     @XmlElement(name="initiator")
     private String initiator;
     
+    @XmlElement(name="deploymentId")
+    private String deploymentId;
+    
     public GetProcessInstanceDescCommand() {
     }
     
@@ -35,10 +38,11 @@ public class GetProcessInstanceDescCommand extends RuntimeDataServiceCommand<Col
         this.processInstanceId = processInstanceId;
     }
     
-    public GetProcessInstanceDescCommand(List<Integer> states, String filterText, String initiator) {
+    public GetProcessInstanceDescCommand(List<Integer> states, String filterText, String initiator, String deploymentId) {
         this.states = states;
         this.filterText = filterText;
         this.initiator = initiator;
+        this.deploymentId = deploymentId;
     }
 
     @Override
@@ -51,6 +55,9 @@ public class GetProcessInstanceDescCommand extends RuntimeDataServiceCommand<Col
                 result.add(desc);
             }
             return result;
+        }
+        if (deploymentId != null && !deploymentId.equals("")) {
+            return dataService.getProcessInstancesByDeploymentId(deploymentId, states);
         }
         if (filterText != null && !filterText.equals("")) {
             return dataService.getProcessInstancesByProcessName(states, filterText, initiator);

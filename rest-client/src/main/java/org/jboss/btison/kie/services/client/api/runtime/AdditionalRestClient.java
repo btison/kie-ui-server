@@ -62,9 +62,17 @@ public class AdditionalRestClient extends AbstractBaseRestClient {
         request.setProcessInstanceId(processInstanceId);
         JaxbCommandsResponse response = RuntimeClientHolder.runtimeClient.execute(request);
     }
-
+    
     public Collection<ProcessInstanceDesc> getProcessInstanceDesc(List<Integer> states, String filterText, String initiator) {
-        GetProcessInstanceDescCommand command = new GetProcessInstanceDescCommand(states, filterText, initiator);
+        return getProcessInstanceDesc(states, filterText, initiator, null);
+    }
+    
+    public Collection<ProcessInstanceDesc> getProcessInstanceDesc(String deploymentId, List<Integer> states) {
+        return getProcessInstanceDesc(states, null, null, deploymentId);
+    }
+
+    public Collection<ProcessInstanceDesc> getProcessInstanceDesc(List<Integer> states, String filterText, String initiator, String deploymentId) {
+        GetProcessInstanceDescCommand command = new GetProcessInstanceDescCommand(states, filterText, initiator, deploymentId);
         JaxbCommandsRequest request = new JaxbCommandsRequest(null, command);
         JaxbCommandsResponse response = RuntimeClientHolder.runtimeClient.execute(request);
         if (response.getResponses() != null && !response.getResponses().isEmpty()) {

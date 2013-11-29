@@ -95,6 +95,6 @@
     <module>rest-client</module>
   </modules>
   <properties>
-    <bpms.version>6.0.0-redhat-5</bpms.version>
+    <bpms.version>6.0.0-redhat-6</bpms.version>
   </properties>
 </project>

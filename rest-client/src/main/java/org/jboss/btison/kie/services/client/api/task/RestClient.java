@@ -36,10 +36,10 @@ import org.kie.internal.task.api.model.InternalComment;
 import org.kie.internal.task.api.model.InternalPeopleAssignments;
 import org.kie.internal.task.api.model.InternalTask;
 import org.kie.internal.task.api.model.InternalTaskData;
-import org.kie.services.client.serialization.jaxb.JaxbCommandsRequest;
-import org.kie.services.client.serialization.jaxb.JaxbCommandsResponse;
+import org.kie.services.client.serialization.jaxb.impl.JaxbCommandsRequest;
+import org.kie.services.client.serialization.jaxb.impl.JaxbCommandsResponse;
 import org.kie.services.client.serialization.jaxb.impl.JaxbPrimitiveResponse;
-import org.kie.services.client.serialization.jaxb.impl.JaxbTaskSummaryListResponse;
+import org.kie.services.client.serialization.jaxb.impl.task.JaxbTaskSummaryListResponse;
 
 public class RestClient extends AbstractBaseRestClient {
     

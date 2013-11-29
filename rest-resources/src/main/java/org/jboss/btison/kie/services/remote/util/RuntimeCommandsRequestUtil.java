@@ -9,7 +9,6 @@ import org.jboss.btison.kie.services.command.runtime.process.RuntimeDataServiceC
 import org.jboss.btison.kie.services.remote.cdi.RuntimeProcessRequestBean;
 import org.jboss.resteasy.spi.NotAcceptableException;
 import org.kie.api.command.Command;
-import org.kie.services.client.serialization.jaxb.impl.JaxbExceptionResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,14 +30,17 @@ public class RuntimeCommandsRequestUtil {
                 }
                 logger.debug("Processing command " + cmd.getClass().getSimpleName());
                 Object cmdResult = null;
-                if (cmd instanceof RuntimeDataServiceCommand<?>) {
-                    cmdResult = requestBean.doRuntimeDataServiceOperation(cmd);
-                } else {
-                    cmdResult = requestBean.doKieSessionOperation(cmd, request.getProcessInstanceId());
-                }
-                if (cmdResult instanceof JaxbExceptionResponse) {
-                    Exception e = ((JaxbExceptionResponse) cmdResult).cause;
+                try {
+                    String errorMsg = "Unable to execute " + cmd.getClass().getSimpleName() + "/" + i;
+                    if (cmd instanceof RuntimeDataServiceCommand<?>) {
+                        cmdResult = requestBean.doRuntimeDataServiceOperation(cmd);
+                    } else {
+                        cmdResult = requestBean.doKieSessionOperation(cmd, request.getProcessInstanceId(), errorMsg);
+                    }
+                } catch(Exception e) { 
                     jaxbResponse.addException(e, i, cmd);
+                    logger.warn("Unable to execute " + cmd.getClass().getSimpleName() + "/" + i
+                            + " because of " + e.getClass().getSimpleName() + ": " + e.getMessage(), e);
                 }
                 if (cmdResult != null) {
                     try {

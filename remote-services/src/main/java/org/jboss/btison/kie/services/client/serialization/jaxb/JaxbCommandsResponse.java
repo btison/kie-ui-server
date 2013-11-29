@@ -53,11 +53,11 @@ import org.kie.services.client.serialization.jaxb.impl.JaxbExceptionResponse;
 import org.kie.services.client.serialization.jaxb.impl.JaxbLongListResponse;
 import org.kie.services.client.serialization.jaxb.impl.JaxbOtherResponse;
 import org.kie.services.client.serialization.jaxb.impl.JaxbPrimitiveResponse;
-import org.kie.services.client.serialization.jaxb.impl.JaxbProcessInstanceListResponse;
-import org.kie.services.client.serialization.jaxb.impl.JaxbProcessInstanceResponse;
-import org.kie.services.client.serialization.jaxb.impl.JaxbTaskResponse;
-import org.kie.services.client.serialization.jaxb.impl.JaxbTaskSummaryListResponse;
-import org.kie.services.client.serialization.jaxb.impl.JaxbWorkItem;
+import org.kie.services.client.serialization.jaxb.impl.process.JaxbProcessInstanceListResponse;
+import org.kie.services.client.serialization.jaxb.impl.process.JaxbProcessInstanceResponse;
+import org.kie.services.client.serialization.jaxb.impl.task.JaxbTaskResponse;
+import org.kie.services.client.serialization.jaxb.impl.task.JaxbTaskSummaryListResponse;
+import org.kie.services.client.serialization.jaxb.impl.process.JaxbWorkItem;
 
 @SuppressWarnings("rawtypes")
 @XmlRootElement(name = "command-response")
@@ -76,6 +76,8 @@ public class JaxbCommandsResponse {
     @XmlSchemaType(name = "int")
     private Integer version;
 
+    //TODO
+    // check task-content
     @XmlElements({ 
             @XmlElement(name = "exception", type = JaxbExceptionResponse.class),
             @XmlElement(name = "long-list", type = JaxbLongListResponse.class),

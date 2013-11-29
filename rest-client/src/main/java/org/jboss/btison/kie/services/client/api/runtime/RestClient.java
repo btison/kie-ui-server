@@ -7,9 +7,9 @@ import org.drools.core.command.runtime.process.SignalEventCommand;
 import org.drools.core.command.runtime.process.StartProcessCommand;
 import org.jboss.btison.kie.services.client.api.AbstractBaseRestClient;
 import org.jboss.resteasy.client.ProxyFactory;
-import org.kie.services.client.serialization.jaxb.JaxbCommandsRequest;
-import org.kie.services.client.serialization.jaxb.JaxbCommandsResponse;
-import org.kie.services.client.serialization.jaxb.impl.JaxbProcessInstanceResponse;
+import org.kie.services.client.serialization.jaxb.impl.JaxbCommandsRequest;
+import org.kie.services.client.serialization.jaxb.impl.JaxbCommandsResponse;
+import org.kie.services.client.serialization.jaxb.impl.process.JaxbProcessInstanceResponse;
 
 public class RestClient extends AbstractBaseRestClient {
     

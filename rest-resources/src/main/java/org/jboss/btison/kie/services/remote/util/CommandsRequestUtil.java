@@ -9,8 +9,8 @@ import org.jboss.resteasy.spi.NotAcceptableException;
 import org.jbpm.services.task.commands.TaskCommand;
 import org.kie.api.command.Command;
 import org.kie.services.client.serialization.jaxb.impl.JaxbExceptionResponse;
-import org.kie.services.remote.cdi.ProcessRequestBean;
 import org.kie.services.remote.exception.KieRemoteServicesInternalError;
+import org.kie.services.remote.rest.RestProcessRequestBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +18,7 @@ public class CommandsRequestUtil {
     
     private static final Logger logger = LoggerFactory.getLogger(CommandsRequestUtil.class);
 
-    public static JaxbCommandsResponse restProcessJaxbCommandsRequest(JaxbCommandsRequest request, ProcessRequestBean requestBean) {
+    public static JaxbCommandsResponse restProcessJaxbCommandsRequest(JaxbCommandsRequest request, RestProcessRequestBean requestBean) {
         // If exceptions are happening here, then there is something REALLY wrong and they should be thrown.
         JaxbCommandsResponse jaxbResponse = new JaxbCommandsResponse(request);
         List<Command<?>> commands = request.getCommands();
@@ -32,10 +32,12 @@ public class CommandsRequestUtil {
                 }
                 logger.debug("Processing command " + cmd.getClass().getSimpleName());
                 Object cmdResult = null;
+                String errorMsg = "Unable to execute " + cmd.getClass().getSimpleName() + "/" + i;
                 if (cmd instanceof TaskCommand<?>) {
-                    cmdResult = requestBean.doTaskOperation(cmd);
+                    TaskCommand<?> taskCmd = (TaskCommand<?>) cmd;
+                    cmdResult = requestBean.doTaskOperationAndSerializeResult(taskCmd, errorMsg);
                 } else {
-                    cmdResult = requestBean.doKieSessionOperation(cmd, request.getDeploymentId(), request.getProcessInstanceId());
+                    cmdResult = requestBean.doKieSessionOperation(cmd, request.getDeploymentId(), request.getProcessInstanceId(), errorMsg);
                 }
                 if (cmdResult instanceof JaxbExceptionResponse) {
                     Exception e = ((JaxbExceptionResponse) cmdResult).cause;

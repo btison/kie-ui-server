@@ -6,9 +6,6 @@ import java.util.Map.Entry;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
-import org.kie.services.client.serialization.jaxb.impl.adapter.JaxbStringMap;
-import org.kie.services.client.serialization.jaxb.impl.adapter.JaxbStringMapEntry;
-
 public class ObjectMapXmlAdapter extends XmlAdapter<JaxbStringMap, Map<String, Object>> {
 
     @Override

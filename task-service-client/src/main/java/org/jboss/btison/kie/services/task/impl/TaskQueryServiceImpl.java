@@ -185,5 +185,16 @@ public class TaskQueryServiceImpl implements TaskQueryService {
         AdditionalRestClient restClient = new AdditionalRestClient();
         return restClient.getPotentialOwnersForTaskIds(taskIds);
     }
+    
+    public List<TaskSummary> getTasksByVariousFields( List<Long> workItemIds, List<Long> taskIds, List<Long> procInstIds, 
+            List<String> busAdmins, List<String> potOwners, List<String> taskOwners, 
+            List<Status> statuses, boolean union) { 
+        
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    public List<TaskSummary> getTasksByVariousFields( Map<String, List<?>> parameters, boolean union ) { 
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
 }

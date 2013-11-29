@@ -22,16 +22,19 @@ import java.util.List;
 import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.interceptor.Interceptors;
 
 import org.jboss.btison.kie.services.client.api.runtime.AdditionalRestClient;
 import org.jboss.btison.kie.services.client.api.runtime.RestClient;
 import org.jboss.errai.bus.server.annotations.Service;
+import org.jboss.seam.transaction.TransactionInterceptor;
 import org.jboss.seam.transaction.Transactional;
 import org.jbpm.console.ng.bd.service.KieSessionEntryPoint;
 
 @Service
 @ApplicationScoped
 @Transactional
+@Interceptors({TransactionInterceptor.class})
 public class KieSessionEntryPointImpl implements KieSessionEntryPoint {
     
     @Override

@@ -7,8 +7,10 @@ import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.interceptor.Interceptors;
 
 import org.jboss.errai.bus.server.annotations.Service;
+import org.jboss.seam.transaction.TransactionInterceptor;
 import org.jboss.seam.transaction.Transactional;
 import org.jbpm.console.ng.bd.service.DataServiceEntryPoint;
 import org.jbpm.console.ng.ht.backend.server.TaskDefHelper;
@@ -28,6 +30,7 @@ import org.jbpm.kie.services.impl.model.ProcessInstanceDesc;
 @Service
 @ApplicationScoped
 @Transactional
+@Interceptors({TransactionInterceptor.class})
 public class DataServiceEntryPointImpl implements DataServiceEntryPoint {
 
     @Inject
@@ -57,8 +60,8 @@ public class DataServiceEntryPointImpl implements DataServiceEntryPoint {
     }
 
     @Override
-    public ProcessSummary getProcessById(String processId) {
-        return ProcessHelper.adapt(dataService.getProcessById(processId));
+    public ProcessSummary getProcessById(String deploymentId, String processId) {
+        return ProcessHelper.adapt(dataService.getProcessesByDeploymentIdProcessId(deploymentId, processId));
     }
 
     @Override

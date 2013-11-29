@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import org.jboss.btison.kie.services.task.commands.TaskContext;
 import org.jboss.seam.transaction.Transactional;
 import org.jbpm.services.task.commands.TaskCommand;
+import org.jbpm.services.task.impl.ThrowableInteranlTaskService;
 import org.jbpm.services.task.rule.TaskRuleService;
 import org.jbpm.services.task.utils.ContentMarshallerHelper;
 import org.jbpm.shared.services.impl.events.JbpmServicesEventImpl;
@@ -28,7 +29,6 @@ import org.kie.api.task.model.TaskSummary;
 import org.kie.api.task.model.User;
 import org.kie.internal.task.api.ContentMarshallerContext;
 import org.kie.internal.task.api.EventService;
-import org.kie.internal.task.api.InternalTaskService;
 import org.kie.internal.task.api.TaskAdminService;
 import org.kie.internal.task.api.TaskAttachmentService;
 import org.kie.internal.task.api.TaskCommentService;
@@ -49,7 +49,7 @@ import org.kie.internal.task.api.model.TaskEvent;
 
 @Transactional
 @ApplicationScoped
-public class TaskServiceEntryPointImpl implements InternalTaskService, EventService<JbpmServicesEventListener<NotificationEvent>,JbpmServicesEventListener<Task>> {
+public class TaskServiceEntryPointImpl implements ThrowableInteranlTaskService, EventService<JbpmServicesEventListener<NotificationEvent>,JbpmServicesEventListener<Task>> {
 
     @Inject
     private TaskDefService taskDefService;
@@ -666,6 +666,19 @@ public class TaskServiceEntryPointImpl implements InternalTaskService, EventServ
         }
 
         return new ContentMarshallerContext();
+    }
+    
+    @Override
+    public List<TaskSummary> getTasksByVariousFields(List<Long> workItemIds, List<Long> taskIds, List<Long> procInstIds,
+            List<String> busAdmins, List<String> potOwners, List<String> taskOwners, List<Status> status, boolean union) {
+        return this.taskQueryService.getTasksByVariousFields(workItemIds, taskIds, procInstIds, 
+                busAdmins, potOwners, taskOwners, 
+                status, union);
+    }
+
+    @Override
+    public List<TaskSummary> getTasksByVariousFields(Map<String, List<?>> parameters, boolean union) {
+        return this.taskQueryService.getTasksByVariousFields(parameters, union);
     }
     
 }

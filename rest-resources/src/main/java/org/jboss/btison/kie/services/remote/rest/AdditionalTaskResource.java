@@ -12,7 +12,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jboss.btison.kie.services.client.serialization.jaxb.JaxbCommandsRequest;
 import org.jboss.btison.kie.services.client.serialization.jaxb.JaxbCommandsResponse;
-import org.kie.services.remote.cdi.ProcessRequestBean;
+import org.kie.services.remote.rest.RestProcessRequestBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 public class AdditionalTaskResource {
     
     @Inject
-    private ProcessRequestBean processRequestBean;
+    private RestProcessRequestBean processRequestBean;
     
     private static final Logger logger = LoggerFactory.getLogger(AdditionalTaskResource.class);
     
